@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block titulo %}OficinaFácil{% endblock %} · OficinaFácil</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  {% if current_user.is_authenticated %}
+  <header class="topo">
+    <a class="logo" href="{{ url_for('dashboard.index') }}">🔧 OficinaFácil</a>
+    <button class="menu-toggle" id="menuToggle" aria-label="Abrir menu">☰</button>
+    <nav class="menu" id="menu">
+      <a href="{{ url_for('dashboard.index') }}" class="{{ 'ativo' if request.blueprint == 'dashboard' }}">Painel</a>
+      <a href="{{ url_for('clientes.listar') }}" class="{{ 'ativo' if request.blueprint == 'clientes' }}">Clientes</a>
+      <a href="{{ url_for('veiculos.listar') }}" class="{{ 'ativo' if request.blueprint == 'veiculos' }}">Veículos</a>
+      <a href="{{ url_for('ordens.listar') }}" class="{{ 'ativo' if request.blueprint == 'ordens' }}">Ordens de serviço</a>
+      <span class="usuario">{{ current_user.nome }}</span>
+      <a href="{{ url_for('auth.logout') }}" class="sair">Sair</a>
+    </nav>
+  </header>
+  {% endif %}
+
+  <main class="conteudo {% if not current_user.is_authenticated %}centralizado{% endif %}">
+    {% with mensagens = get_flashed_messages(with_categories=true) %}
+      {% for categoria, mensagem in mensagens %}
+        <div class="alerta alerta-{{ categoria }}">{{ mensagem }}</div>
+      {% endfor %}
+    {% endwith %}
+    {% block conteudo %}{% endblock %}
+  </main>
+
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>

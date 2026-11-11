@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block titulo %}{{ 'Editar' if cliente else 'Novo' }} cliente{% endblock %}
+{% block conteudo %}
+<div class="cabecalho"><h1>{{ 'Editar cliente' if cliente else 'Novo cliente' }}</h1></div>
+
+<section class="cartao formulario">
+  <form method="post">
+    <label>Nome completo *
+      <input type="text" name="nome" required value="{{ form.get('nome') or (cliente.nome if cliente else '') }}">
+    </label>
+    <div class="linha">
+      <label>Telefone *
+        <input type="tel" name="telefone" required data-mascara="telefone" placeholder="(48) 99999-9999"
+               value="{{ form.get('telefone') or (cliente.telefone if cliente else '') }}">
+      </label>
+      <label>CPF
+        <input type="text" name="cpf" data-mascara="cpf" placeholder="000.000.000-00"
+               value="{{ form.get('cpf') or (cliente.cpf if cliente and cliente.cpf else '') }}">
+      </label>
+    </div>
+    <label>E-mail
+      <input type="email" name="email" value="{{ form.get('email') or (cliente.email if cliente and cliente.email else '') }}">
+    </label>
+    <div class="botoes">
+      <a href="{{ url_for('clientes.listar') }}" class="btn">Cancelar</a>
+      <button type="submit" class="btn btn-primario">Salvar</button>
+    </div>
+  </form>
+</section>
+{% endblock %}

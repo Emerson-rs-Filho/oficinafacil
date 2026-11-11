@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block titulo %}Clientes{% endblock %}
+{% block conteudo %}
+<div class="cabecalho">
+  <h1>Clientes</h1>
+  <a href="{{ url_for('clientes.novo') }}" class="btn btn-primario">+ Novo cliente</a>
+</div>
+
+<form class="busca" method="get">
+  <input type="search" name="q" placeholder="Buscar por nome, telefone ou CPF" value="{{ busca }}">
+  <button class="btn">Buscar</button>
+</form>
+
+<section class="cartao">
+  {% if clientes %}
+  <table class="tabela">
+    <thead><tr><th>Nome</th><th>Telefone</th><th>E-mail</th><th>Veículos</th><th></th></tr></thead>
+    <tbody>
+      {% for cliente in clientes %}
+      <tr>
+        <td data-rotulo="Nome">{{ cliente.nome }}</td>
+        <td data-rotulo="Telefone">{{ cliente.telefone }}</td>
+        <td data-rotulo="E-mail">{{ cliente.email or '-' }}</td>
+        <td data-rotulo="Veículos">{{ cliente.veiculos | length }}</td>
+        <td class="col-acoes"><div class="acoes">
+          <a href="{{ url_for('clientes.editar', cliente_id=cliente.id) }}" class="btn btn-pequeno">Editar</a>
+          <form method="post" action="{{ url_for('clientes.excluir', cliente_id=cliente.id) }}"
+                data-confirmar="Excluir {{ cliente.nome }}? Os veículos e ordens dele também serão excluídos.">
+            <button class="btn btn-pequeno btn-perigo">Excluir</button>
+          </form>
+        </div></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p class="vazio">Nenhum cliente encontrado.</p>
+  {% endif %}
+</section>
+{% endblock %}

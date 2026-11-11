@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block titulo %}Entrar{% endblock %}
+{% block conteudo %}
+<div class="cartao cartao-auth">
+  <h1>🔧 OficinaFácil</h1>
+  <p class="sub">Agendamentos e ordens de serviço da sua oficina</p>
+  <form method="post">
+    <label>E-mail
+      <input type="email" name="email" required autofocus>
+    </label>
+    <label>Senha
+      <input type="password" name="senha" required>
+    </label>
+    <button type="submit" class="btn btn-primario btn-bloco">Entrar</button>
+  </form>
+  <p class="rodape-auth">Não tem conta? <a href="{{ url_for('auth.cadastro') }}">Cadastre-se</a></p>
+</div>
+{% endblock %}

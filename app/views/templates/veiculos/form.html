@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block titulo %}{{ 'Editar' if veiculo else 'Novo' }} veículo{% endblock %}
+{% block conteudo %}
+<div class="cabecalho"><h1>{{ 'Editar veículo' if veiculo else 'Novo veículo' }}</h1></div>
+
+<section class="cartao formulario">
+  {% if not clientes %}
+    <p class="vazio">Cadastre um cliente antes de cadastrar veículos.
+      <a href="{{ url_for('clientes.novo') }}">Cadastrar cliente</a></p>
+  {% else %}
+  {% set cliente_sel = form.get('cliente_id') or (veiculo.cliente_id|string if veiculo else '') %}
+  <form method="post">
+    <label>Cliente proprietário *
+      <select name="cliente_id" required>
+        <option value="">Selecione...</option>
+        {% for c in clientes %}
+        <option value="{{ c.id }}" {{ 'selected' if cliente_sel == c.id|string }}>{{ c.nome }}</option>
+        {% endfor %}
+      </select>
+    </label>
+    <div class="linha">
+      <label>Placa *
+        <input type="text" name="placa" required maxlength="8" data-mascara="placa" placeholder="ABC1D23"
+               value="{{ form.get('placa') or (veiculo.placa if veiculo else '') }}">
+      </label>
+      <label>Ano
+        <input type="number" name="ano" min="1950" max="2100"
+               value="{{ form.get('ano') or (veiculo.ano if veiculo and veiculo.ano else '') }}">
+      </label>
+    </div>
+    <div class="linha">
+      <label>Marca *
+        <input type="text" name="marca" required value="{{ form.get('marca') or (veiculo.marca if veiculo else '') }}">
+      </label>
+      <label>Modelo *
+        <input type="text" name="modelo" required value="{{ form.get('modelo') or (veiculo.modelo if veiculo else '') }}">
+      </label>
+    </div>
+    <div class="botoes">
+      <a href="{{ url_for('veiculos.listar') }}" class="btn">Cancelar</a>
+      <button type="submit" class="btn btn-primario">Salvar</button>
+    </div>
+  </form>
+  {% endif %}
+</section>
+{% endblock %}

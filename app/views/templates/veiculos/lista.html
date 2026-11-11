@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block titulo %}Veículos{% endblock %}
+{% block conteudo %}
+<div class="cabecalho">
+  <h1>Veículos</h1>
+  <a href="{{ url_for('veiculos.novo') }}" class="btn btn-primario">+ Novo veículo</a>
+</div>
+
+<form class="busca" method="get">
+  <input type="search" name="q" placeholder="Buscar por placa, modelo ou cliente" value="{{ busca }}">
+  <button class="btn">Buscar</button>
+</form>
+
+<section class="cartao">
+  {% if veiculos %}
+  <table class="tabela">
+    <thead><tr><th>Placa</th><th>Marca/Modelo</th><th>Ano</th><th>Proprietário</th><th></th></tr></thead>
+    <tbody>
+      {% for veiculo in veiculos %}
+      <tr>
+        <td data-rotulo="Placa"><span class="placa">{{ veiculo.placa }}</span></td>
+        <td data-rotulo="Marca/Modelo">{{ veiculo.marca }} {{ veiculo.modelo }}</td>
+        <td data-rotulo="Ano">{{ veiculo.ano or '-' }}</td>
+        <td data-rotulo="Proprietário">{{ veiculo.cliente.nome }}</td>
+        <td class="col-acoes"><div class="acoes">
+          <a href="{{ url_for('veiculos.editar', veiculo_id=veiculo.id) }}" class="btn btn-pequeno">Editar</a>
+          <form method="post" action="{{ url_for('veiculos.excluir', veiculo_id=veiculo.id) }}"
+                data-confirmar="Excluir o veículo {{ veiculo.placa }}? As ordens dele também serão excluídas.">
+            <button class="btn btn-pequeno btn-perigo">Excluir</button>
+          </form>
+        </div></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p class="vazio">Nenhum veículo encontrado.</p>
+  {% endif %}
+</section>
+{% endblock %}

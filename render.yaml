@@ -1,0 +1,15 @@
+# Configuração do Render (Blueprint). O Render lê este arquivo do GitHub.
+services:
+  - type: web
+    name: oficinafacil
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt && python seed.py
+    startCommand: gunicorn run:app
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.7
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URL
+        sync: false   # cole aqui a string do Session pooler do Supabase

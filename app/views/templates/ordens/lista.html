@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block titulo %}Ordens de serviço{% endblock %}
+{% block conteudo %}
+<div class="cabecalho">
+  <h1>Ordens de serviço</h1>
+  <a href="{{ url_for('ordens.nova') }}" class="btn btn-primario">+ Nova ordem</a>
+</div>
+
+<nav class="filtros">
+  <a href="{{ url_for('ordens.listar') }}" class="{{ 'ativo' if not filtro }}">Todas</a>
+  {% for s in status_lista %}
+  <a href="{{ url_for('ordens.listar', status=s) }}" class="{{ 'ativo' if filtro == s }}">{{ s }}</a>
+  {% endfor %}
+</nav>
+
+<section class="cartao">
+  {% if ordens %}
+  <table class="tabela">
+    <thead><tr><th>Nº</th><th>Data</th><th>Veículo</th><th>Cliente</th><th>Serviço</th><th>Valor</th><th>Status</th><th></th></tr></thead>
+    <tbody>
+      {% for ordem in ordens %}
+      <tr>
+        <td data-rotulo="Nº">#{{ ordem.id }}</td>
+        <td data-rotulo="Data" class="nowrap">{{ ordem.data_agendada | data_br }}</td>
+        <td data-rotulo="Veículo">{{ ordem.veiculo.descricao }}</td>
+        <td data-rotulo="Cliente">{{ ordem.veiculo.cliente.nome }}</td>
+        <td data-rotulo="Serviço">{{ ordem.descricao }}</td>
+        <td data-rotulo="Valor" class="nowrap">{{ ordem.valor | moeda }}</td>
+        <td data-rotulo="Status">
+          <select class="seletor-status selo selo-{{ ordem.classe_status }}"
+                  data-url="{{ url_for('ordens.alterar_status', ordem_id=ordem.id) }}" aria-label="Status">
+            {% for s in status_lista %}
+            <option value="{{ s }}" {{ 'selected' if ordem.status == s }}>{{ s }}</option>
+            {% endfor %}
+          </select>
+        </td>
+        <td class="col-acoes"><div class="acoes">
+          <a href="{{ url_for('ordens.editar', ordem_id=ordem.id) }}" class="btn btn-pequeno">Editar</a>
+          <form method="post" action="{{ url_for('ordens.excluir', ordem_id=ordem.id) }}"
+                data-confirmar="Excluir a ordem #{{ ordem.id }}?">
+            <button class="btn btn-pequeno btn-perigo">Excluir</button>
+          </form>
+        </div></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p class="vazio">Nenhuma ordem de serviço encontrada.</p>
+  {% endif %}
+</section>
+{% endblock %}
